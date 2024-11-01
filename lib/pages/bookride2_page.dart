@@ -11,12 +11,12 @@ class Bookride2Page extends StatefulWidget {
   final String? paymentOption;
 
   const Bookride2Page({
-    super.key,
+    Key? key,
     this.fromLocation,
     this.toLocation,
     this.genderPreference,
     this.paymentOption,
-  });
+  }) : super(key: key);
 
   @override
   State<Bookride2Page> createState() => _Bookride2PageState();
@@ -25,14 +25,15 @@ class Bookride2Page extends StatefulWidget {
 class _Bookride2PageState extends State<Bookride2Page> {
   late String additionalInformation;
   late String userName;
-  late double price;
+  //late double price;
+  double price = 0.0;
 
   @override
   void initState() {
     super.initState();
     additionalInformation = '';
     userName = '';
-    price = calculatePrice(widget.fromLocation, widget.toLocation);
+    calculatePrice(widget.fromLocation, widget.toLocation);
     fetchUserName();
   }
 
@@ -58,169 +59,199 @@ class _Bookride2PageState extends State<Bookride2Page> {
     }
   }
 
-  double calculatePrice(String? from, String? to) {
-    final Map<String, double> priceMap = {
-      'Kolej Ibrahim Yaakub (KIY)_Kolej Pendeta Zaba (KPZ)': 3.0,
-      'Kolej Ibrahim Yaakub (KIY)_Kolej Ibu Zain (KIZ)': 5.0,
-      'Kolej Ibrahim Yaakub (KIY)_Kolej Ungku Omar (KUO)': 2.0,
-      'Kolej Ibrahim Yaakub (KIY)_Kolej Aminuddin Baki (KAB)': 5.0,
-      'Kolej Ibrahim Yaakub (KIY)_Kolej Dato\' Onn (KDO)': 6.0,
-      'Kolej Ibrahim Yaakub (KIY)_Kolej Rahim Kajai (KRK)': 6.0,
-      'Kolej Ibrahim Yaakub (KIY)_Kolej Keris Mas (KKM)': 7.0,
-      'Kolej Ibrahim Yaakub (KIY)_Kolej Tun Hussein Onn (KTHO)': 6.0,
+  void calculatePrice(String? from, String? to) {
+    final Map<String, String> distanceMap = {
+      'Kolej Ibrahim Yaakub (KIY)_Kolej Pendeta Zaba (KPZ)': '1.5 km',
+      'Kolej Ibrahim Yaakub (KIY)_Kolej Ibu Zain (KIZ)': '2.7 km',
+      'Kolej Ibrahim Yaakub (KIY)_Kolej Ungku Omar (KUO)': '0.3 km',
+      'Kolej Ibrahim Yaakub (KIY)_Kolej Aminuddin Baki (KAB)': '2.2 km',
+      'Kolej Ibrahim Yaakub (KIY)_Kolej Dato\' Onn (KDO)': '1.9 km',
+      'Kolej Ibrahim Yaakub (KIY)_Kolej Rahim Kajai (KRK)': '2.1 km',
+      'Kolej Ibrahim Yaakub (KIY)_Kolej Keris Mas (KKM)': '3.2 km',
+      'Kolej Ibrahim Yaakub (KIY)_Kolej Tun Hussein Onn (KTHO)': '1.7 km',
       'Kolej Ibrahim Yaakub (KIY)_Fakulti Teknologi dan Sains Maklumat (FTSM)':
-          4.0,
+          '1.5 km',
       'Kolej Ibrahim Yaakub (KIY)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)':
-          6.0,
-      'Kolej Ibrahim Yaakub (KIY)_Fakulti Undang-Undang (FUU)': 5.0,
+          '1.5 km',
+      'Kolej Ibrahim Yaakub (KIY)_Fakulti Undang-Undang (FUU)': '2.3 km',
       'Kolej Ibrahim Yaakub (KIY)_Fakulti Kejuruteraan dan Alam Bina (FKAB)':
-          4.0,
-      'Kolej Ibrahim Yaakub (KIY)_Fakulti Sains dan Teknologi (FST)': 2.0,
-      'Kolej Ibrahim Yaakub (KIY)_Fakulti Pendidikan (FPEND)': 3.0,
-      'Kolej Ibrahim Yaakub (KIY)_Fakulti Ekonomi dan Pengurusan (FEP)': 6.0,
-      'Kolej Ibrahim Yaakub (KIY)_Fakulti Pengajian Islam (FPI)': 4.0,
-      'Kolej Ibrahim Yaakub (KIY)_Pusat Pengajian Citra Universiti (PPCU)': 3.0,
-      'Kolej Ungku Omar (KUO)_Kolej Pendeta Zaba (KPZ)': 4.0,
-      'Kolej Ungku Omar (KUO)_Kolej Aminuddin Baki (KAB)': 5.0,
-      'Kolej Ungku Omar (KUO)_Kolej Dato\' Onn (KDO)': 6.0,
-      'Kolej Ungku Omar (KUO)_Kolej Burhanuddin Helmi (KBH)': 3.0,
-      'Kolej Ungku Omar (KUO)_Kolej Rahim Kajai (KRK)': 6.0,
-      'Kolej Ungku Omar (KUO)_Kolej Ibu Zain (KIZ)': 5.0,
-      'Kolej Ungku Omar (KUO)_Kolej Keris Mas (KKM)': 7.0,
-      'Kolej Ungku Omar (KUO)_Kolej Tun Hussein Onn (KTHO)': 6.0,
-      'Kolej Ungku Omar (KUO)_Fakulti Teknologi dan Sains Maklumat (FTSM)': 5.0,
-      'Kolej Ungku Omar (KUO)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)': 6.0,
-      'Kolej Ungku Omar (KUO)_Fakulti Undang-Undang (FUU)': 6.0,
-      'Kolej Ungku Omar (KUO)_Fakulti Kejuruteraan dan Alam Bina (FKAB)': 3.0,
-      'Kolej Ungku Omar (KUO)_Fakulti Sains dan Teknologi (FST)': 1.0,
-      'Kolej Ungku Omar (KUO)_Fakulti Pendidikan (FPEND)': 3.0,
-      'Kolej Ungku Omar (KUO)_Fakulti Ekonomi dan Pengurusan (FEP)': 6.0,
-      'Kolej Ungku Omar (KUO)_Fakulti Pengajian Islam (FPI)': 4.0,
-      'Kolej Ungku Omar (KUO)_Pusat Pengajian Citra Universiti (PPCU)': 3.0,
-      'Kolej Pendeta Zaba (KPZ)_Kolej Aminuddin Baki (KAB)': 6.0,
-      'Kolej Pendeta Zaba (KPZ)_Kolej Dato\' Onn (KDO)': 7.0,
-      'Kolej Pendeta Zaba (KPZ)_Kolej Burhanuddin Helmi (KBH)': 4.0,
-      'Kolej Pendeta Zaba (KPZ)_Kolej Rahim Kajai (KRK)': 7.0,
-      'Kolej Pendeta Zaba (KPZ)_Kolej Ibu Zain (KIZ)': 7.0,
-      'Kolej Pendeta Zaba (KPZ)_Kolej Keris Mas (KKM)': 8.0,
-      'Kolej Pendeta Zaba (KPZ)_Kolej Tun Hussein Onn (KTHO)': 7.0,
+          '1.4 km',
+      'Kolej Ibrahim Yaakub (KIY)_Fakulti Sains dan Teknologi (FST)': '0.5 km',
+      'Kolej Ibrahim Yaakub (KIY)_Fakulti Pendidikan (FPEND)': '1.4 km',
+      'Kolej Ibrahim Yaakub (KIY)_Fakulti Ekonomi dan Pengurusan (FEP)':
+          '2.0 km',
+      'Kolej Ibrahim Yaakub (KIY)_Fakulti Pengajian Islam (FPI)': '1.0 km',
+      'Kolej Ibrahim Yaakub (KIY)_Pusat Pengajian Citra Universiti (PPCU)':
+          '0.9 km',
+      'Kolej Ungku Omar (KUO)_Kolej Pendeta Zaba (KPZ)': '1.4 km',
+      'Kolej Ungku Omar (KUO)_Kolej Aminuddin Baki (KAB)': '1.8 km',
+      'Kolej Ungku Omar (KUO)_Kolej Dato\' Onn (KDO)': '1.5 km',
+      'Kolej Ungku Omar (KUO)_Kolej Burhanuddin Helmi (KBH)': '0.5 km',
+      'Kolej Ungku Omar (KUO)_Kolej Rahim Kajai (KRK)': '1.8 km',
+      'Kolej Ungku Omar (KUO)_Kolej Ibu Zain (KIZ)': '2.4 km',
+      'Kolej Ungku Omar (KUO)_Kolej Keris Mas (KKM)': '2.9 km',
+      'Kolej Ungku Omar (KUO)_Kolej Tun Hussein Onn (KTHO)': '1.4 km',
+      'Kolej Ungku Omar (KUO)_Fakulti Teknologi dan Sains Maklumat (FTSM)':
+          '1.3 km',
+      'Kolej Ungku Omar (KUO)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)':
+          '1.3 km',
+      'Kolej Ungku Omar (KUO)_Fakulti Undang-Undang (FUU)': '2.7 km',
+      'Kolej Ungku Omar (KUO)_Fakulti Kejuruteraan dan Alam Bina (FKAB)':
+          '1.2 km',
+      'Kolej Ungku Omar (KUO)_Fakulti Sains dan Teknologi (FST)': '0.3 km',
+      'Kolej Ungku Omar (KUO)_Fakulti Pendidikan (FPEND)': '1.1 km',
+      'Kolej Ungku Omar (KUO)_Fakulti Ekonomi dan Pengurusan (FEP)': '1.8 km',
+      'Kolej Ungku Omar (KUO)_Fakulti Pengajian Islam (FPI)': '0.9 km',
+      'Kolej Ungku Omar (KUO)_Pusat Pengajian Citra Universiti (PPCU)':
+          '0.6 km',
+      'Kolej Pendeta Zaba (KPZ)_Kolej Aminuddin Baki (KAB)': '3.2 km',
+      'Kolej Pendeta Zaba (KPZ)_Kolej Dato\' Onn (KDO)': '2.9 km',
+      'Kolej Pendeta Zaba (KPZ)_Kolej Burhanuddin Helmi (KBH)': '1.8 km',
+      'Kolej Pendeta Zaba (KPZ)_Kolej Rahim Kajai (KRK)': '3.2 km',
+      'Kolej Pendeta Zaba (KPZ)_Kolej Ibu Zain (KIZ)': '3.8 km',
+      'Kolej Pendeta Zaba (KPZ)_Kolej Keris Mas (KKM)': '4.3 km',
+      'Kolej Pendeta Zaba (KPZ)_Kolej Tun Hussein Onn (KTHO)': '2.8 km',
       'Kolej Pendeta Zaba (KPZ)_Fakulti Teknologi dan Sains Maklumat (FTSM)':
-          2.0,
+          '2.7 km',
       'Kolej Pendeta Zaba (KPZ)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)':
-          7.0,
-      'Kolej Pendeta Zaba (KPZ)_Fakulti Undang-Undang (FUU)': 4.0,
-      'Kolej Pendeta Zaba (KPZ)_Fakulti Kejuruteraan dan Alam Bina (FKAB)': 3.0,
-      'Kolej Pendeta Zaba (KPZ)_Fakulti Sains dan Teknologi (FST)': 5.0,
-      'Kolej Pendeta Zaba (KPZ)_Fakulti Pendidikan (FPEND)': 4.0,
-      'Kolej Pendeta Zaba (KPZ)_Fakulti Ekonomi dan Pengurusan (FEP)': 7.0,
-      'Kolej Pendeta Zaba (KPZ)_Fakulti Pengajian Islam (FPI)': 5.0,
-      'Kolej Pendeta Zaba (KPZ)_Pusat Pengajian Citra Universiti (PPCU)': 4.0,
-      'Kolej Aminuddin Baki (KAB)_Kolej Dato\' Onn (KDO)': 8.0,
-      'Kolej Aminuddin Baki (KAB)_Kolej Burhanuddin Helmi (KBH)': 4.0,
-      'Kolej Aminuddin Baki (KAB)_Kolej Rahim Kajai (KRK)': 8.0,
-      'Kolej Aminuddin Baki (KAB)_Kolej Ibu Zain (KIZ)': 7.0,
-      'Kolej Aminuddin Baki (KAB)_Kolej Keris Mas (KKM)': 8.0,
-      'Kolej Aminuddin Baki (KAB)_Kolej Tun Hussein Onn (KTHO)': 7.0,
+          '2.7 km',
+      'Kolej Pendeta Zaba (KPZ)_Fakulti Undang-Undang (FUU)': '1.6 km',
+      'Kolej Pendeta Zaba (KPZ)_Fakulti Kejuruteraan dan Alam Bina (FKAB)':
+          '1.0 km',
+      'Kolej Pendeta Zaba (KPZ)_Fakulti Sains dan Teknologi (FST)': '1.3 km',
+      'Kolej Pendeta Zaba (KPZ)_Fakulti Pendidikan (FPEND)': '1.6 km',
+      'Kolej Pendeta Zaba (KPZ)_Fakulti Ekonomi dan Pengurusan (FEP)': '3.1 km',
+      'Kolej Pendeta Zaba (KPZ)_Fakulti Pengajian Islam (FPI)': '2.0 km',
+      'Kolej Pendeta Zaba (KPZ)_Pusat Pengajian Citra Universiti (PPCU)':
+          '1.6 km',
+      'Kolej Aminuddin Baki (KAB)_Kolej Dato\' Onn (KDO)': '2.4 km',
+      'Kolej Aminuddin Baki (KAB)_Kolej Burhanuddin Helmi (KBH)': '1.3 km',
+      'Kolej Aminuddin Baki (KAB)_Kolej Rahim Kajai (KRK)': '2.6 km',
+      'Kolej Aminuddin Baki (KAB)_Kolej Ibu Zain (KIZ)': '3.3 km',
+      'Kolej Aminuddin Baki (KAB)_Kolej Keris Mas (KKM)': '3.8 km',
+      'Kolej Aminuddin Baki (KAB)_Kolej Tun Hussein Onn (KTHO)': '2.3 km',
       'Kolej Aminuddin Baki (KAB)_Fakulti Teknologi dan Sains Maklumat (FTSM)':
-          7.0,
+          '2.1 km',
       'Kolej Aminuddin Baki (KAB)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)':
-          8.0,
-      'Kolej Aminuddin Baki (KAB)_Fakulti Undang-Undang (FUU)': 8.0,
+          '2.1 km',
+      'Kolej Aminuddin Baki (KAB)_Fakulti Undang-Undang (FUU)': '3.0 km',
       'Kolej Aminuddin Baki (KAB)_Fakulti Kejuruteraan dan Alam Bina (FKAB)':
-          6.0,
-      'Kolej Aminuddin Baki (KAB)_Fakulti Sains dan Teknologi (FST)': 4.0,
-      'Kolej Aminuddin Baki (KAB)_Fakulti Pendidikan (FPEND)': 6.0,
-      'Kolej Aminuddin Baki (KAB)_Fakulti Ekonomi dan Pengurusan (FEP)': 2.0,
-      'Kolej Aminuddin Baki (KAB)_Fakulti Pengajian Islam (FPI)': 5.0,
-      'Kolej Aminuddin Baki (KAB)_Pusat Pengajian Citra Universiti (PPCU)': 6.0,
-      'Kolej Dato\' Onn (KDO)_Kolej Burhanuddin Helmi (KBH)': 5.0,
-      'Kolej Dato\' Onn (KDO)_Kolej Rahim Kajai (KRK)': 4.0,
-      'Kolej Dato\' Onn (KDO)_Kolej Ibu Zain (KIZ)': 3.0,
-      'Kolej Dato\' Onn (KDO)_Kolej Keris Mas (KKM)': 3.0,
-      'Kolej Dato\' Onn (KDO)_Kolej Tun Hussein Onn (KTHO)': 2.0,
-      'Kolej Dato\' Onn (KDO)_Fakulti Teknologi dan Sains Maklumat (FTSM)': 7.0,
-      'Kolej Dato\' Onn (KDO)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)': 5.0,
-      'Kolej Dato\' Onn (KDO)_Fakulti Undang-Undang (FUU)': 8.0,
-      'Kolej Dato\' Onn (KDO)_Fakulti Kejuruteraan dan Alam Bina (FKAB)': 6.0,
-      'Kolej Dato\' Onn (KDO)_Fakulti Sains dan Teknologi (FST)': 5.0,
-      'Kolej Dato\' Onn (KDO)_Fakulti Pendidikan (FPEND)': 5.0,
-      'Kolej Dato\' Onn (KDO)_Fakulti Ekonomi dan Pengurusan (FEP)': 4.0,
-      'Kolej Dato\' Onn (KDO)_Fakulti Pengajian Islam (FPI)': 5.0,
-      'Kolej Dato\' Onn (KDO)_Pusat Pengajian Citra Universiti (PPCU)': 5.0,
-      'Kolej Burhanuddin Helmi (KBH)_Kolej Rahim Kajai (KRK)': 7.0,
-      'Kolej Burhanuddin Helmi (KBH)_Kolej Ibu Zain (KIZ)': 8.0,
-      'Kolej Burhanuddin Helmi (KBH)_Kolej Keris Mas (KKM)': 8.0,
-      'Kolej Burhanuddin Helmi (KBH)_Kolej Tun Hussein Onn (KTHO)': 7.0,
+          '2.0 km',
+      'Kolej Aminuddin Baki (KAB)_Fakulti Sains dan Teknologi (FST)': '0.8 km',
+      'Kolej Aminuddin Baki (KAB)_Fakulti Pendidikan (FPEND)': '2.0 km',
+      'Kolej Aminuddin Baki (KAB)_Fakulti Ekonomi dan Pengurusan (FEP)':
+          '0.2 km',
+      'Kolej Aminuddin Baki (KAB)_Fakulti Pengajian Islam (FPI)': '1.4 km',
+      'Kolej Aminuddin Baki (KAB)_Pusat Pengajian Citra Universiti (PPCU)':
+          '1.4 km',
+      'Kolej Dato\' Onn (KDO)_Kolej Burhanuddin Helmi (KBH)': '1.3 km',
+      'Kolej Dato\' Onn (KDO)_Kolej Rahim Kajai (KRK)': '0.6 km',
+      'Kolej Dato\' Onn (KDO)_Kolej Ibu Zain (KIZ)': '1.2 km',
+      'Kolej Dato\' Onn (KDO)_Kolej Keris Mas (KKM)': '1.7 km',
+      'Kolej Dato\' Onn (KDO)_Kolej Tun Hussein Onn (KTHO)': '0.5 km',
+      'Kolej Dato\' Onn (KDO)_Fakulti Teknologi dan Sains Maklumat (FTSM)':
+          '0.6 km',
+      'Kolej Dato\' Onn (KDO)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)':
+          '0.6 km',
+      'Kolej Dato\' Onn (KDO)_Fakulti Undang-Undang (FUU)': '3.2 km',
+      'Kolej Dato\' Onn (KDO)_Fakulti Kejuruteraan dan Alam Bina (FKAB)':
+          '1.7 km',
+      'Kolej Dato\' Onn (KDO)_Fakulti Sains dan Teknologi (FST)': '1.8 km',
+      'Kolej Dato\' Onn (KDO)_Fakulti Pendidikan (FPEND)': '1.7 km',
+      'Kolej Dato\' Onn (KDO)_Fakulti Ekonomi dan Pengurusan (FEP)': '1.0 km',
+      'Kolej Dato\' Onn (KDO)_Fakulti Pengajian Islam (FPI)': '2.4 km',
+      'Kolej Dato\' Onn (KDO)_Pusat Pengajian Citra Universiti (PPCU)':
+          '1.1 km',
+      'Kolej Burhanuddin Helmi (KBH)_Kolej Rahim Kajai (KRK)': '1.6 km',
+      'Kolej Burhanuddin Helmi (KBH)_Kolej Ibu Zain (KIZ)': '2.3 km',
+      'Kolej Burhanuddin Helmi (KBH)_Kolej Keris Mas (KKM)': '2.8 km',
+      'Kolej Burhanuddin Helmi (KBH)_Kolej Tun Hussein Onn (KTHO)': '1.3 km',
       'Kolej Burhanuddin Helmi (KBH)_Fakulti Teknologi dan Sains Maklumat (FTSM)':
-          4.0,
+          '1.1 km',
       'Kolej Burhanuddin Helmi (KBH)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)':
-          6.0,
-      'Kolej Burhanuddin Helmi (KBH)_Fakulti Undang-Undang (FUU)': 6.0,
+          '1.1 km',
+      'Kolej Burhanuddin Helmi (KBH)_Fakulti Undang-Undang (FUU)': '2.5 km',
       'Kolej Burhanuddin Helmi (KBH)_Fakulti Kejuruteraan dan Alam Bina (FKAB)':
-          3.0,
-      'Kolej Burhanuddin Helmi (KBH)_Fakulti Sains dan Teknologi (FST)': 3.0,
-      'Kolej Burhanuddin Helmi (KBH)_Fakulti Pendidikan (FPEND)': 3.0,
-      'Kolej Burhanuddin Helmi (KBH)_Fakulti Ekonomi dan Pengurusan (FEP)': 7.0,
-      'Kolej Burhanuddin Helmi (KBH)_Fakulti Pengajian Islam (FPI)': 3.0,
+          '1.0 km',
+      'Kolej Burhanuddin Helmi (KBH)_Fakulti Sains dan Teknologi (FST)':
+          '0.8 km',
+      'Kolej Burhanuddin Helmi (KBH)_Fakulti Pendidikan (FPEND)': '1.0 km',
+      'Kolej Burhanuddin Helmi (KBH)_Fakulti Ekonomi dan Pengurusan (FEP)':
+          '1.6 km',
+      'Kolej Burhanuddin Helmi (KBH)_Fakulti Pengajian Islam (FPI)': '1.4 km',
       'Kolej Burhanuddin Helmi (KBH)_Pusat Pengajian Citra Universiti (PPCU)':
-          2.0,
-      'Kolej Rahim Kajai (KRK)_Kolej Ibu Zain (KIZ)': 3.0,
-      'Kolej Rahim Kajai (KRK)_Kolej Keris Mas (KKM)': 3.0,
-      'Kolej Rahim Kajai (KRK)_Kolej Tun Hussein Onn (KTHO)': 2.0,
+          '0.5 km',
+      'Kolej Rahim Kajai (KRK)_Kolej Ibu Zain (KIZ)': '1.0 km',
+      'Kolej Rahim Kajai (KRK)_Kolej Keris Mas (KKM)': '1.5 km',
+      'Kolej Rahim Kajai (KRK)_Kolej Tun Hussein Onn (KTHO)': '0.7 km',
       'Kolej Rahim Kajai (KRK)_Fakulti Teknologi dan Sains Maklumat (FTSM)':
-          6.0,
+          '0.9 km',
       'Kolej Rahim Kajai (KRK)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)':
-          4.0,
-      'Kolej Rahim Kajai (KRK)_Fakulti Undang-Undang (FUU)': 8.0,
-      'Kolej Rahim Kajai (KRK)_Fakulti Kejuruteraan dan Alam Bina (FKAB)': 8.0,
-      'Kolej Rahim Kajai (KRK)_Fakulti Sains dan Teknologi (FST)': 5.0,
-      'Kolej Rahim Kajai (KRK)_Fakulti Pendidikan (FPEND)': 7.0,
-      'Kolej Rahim Kajai (KRK)_Fakulti Ekonomi dan Pengurusan (FEP)': 5.0,
-      'Kolej Rahim Kajai (KRK)_Fakulti Pengajian Islam (FPI)': 6.0,
-      'Kolej Rahim Kajai (KRK)_Pusat Pengajian Citra Universiti (PPCU)': 5.0,
-      'Kolej Ibu Zain (KIZ)_Kolej Keris Mas (KKM)': 2.0,
-      'Kolej Ibu Zain (KIZ)_Kolej Tun Hussein Onn (KTHO)': 2.0,
-      'Kolej Ibu Zain (KIZ)_Fakulti Teknologi dan Sains Maklumat (FTSM)': 6.0,
-      'Kolej Ibu Zain (KIZ)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)': 5.0,
-      'Kolej Ibu Zain (KIZ)_Fakulti Undang-Undang (FUU)': 8.0,
-      'Kolej Ibu Zain (KIZ)_Fakulti Kejuruteraan dan Alam Bina (FKAB)': 7.0,
-      'Kolej Ibu Zain (KIZ)_Fakulti Sains dan Teknologi (FST)': 5.0,
-      'Kolej Ibu Zain (KIZ)_Fakulti Pendidikan (FPEND)': 6.0,
-      'Kolej Ibu Zain (KIZ)_Fakulti Ekonomi dan Pengurusan (FEP)': 6.0,
-      'Kolej Ibu Zain (KIZ)_Fakulti Pengajian Islam (FPI)': 6.0,
-      'Kolej Ibu Zain (KIZ)_Pusat Pengajian Citra Universiti (PPCU)': 6.0,
-      'Kolej Keris Mas (KKM)_Kolej Tun Hussein Onn (KTHO)': 3.0,
-      'Kolej Keris Mas (KKM)_Fakulti Teknologi dan Sains Maklumat (FTSM)': 8.0,
-      'Kolej Keris Mas (KKM)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)': 6.0,
-      'Kolej Keris Mas (KKM)_Fakulti Undang-Undang (FUU)': 9.0,
-      'Kolej Keris Mas (KKM)_Fakulti Kejuruteraan dan Alam Bina (FKAB)': 7.0,
-      'Kolej Keris Mas (KKM)_Fakulti Sains dan Teknologi (FST)': 5.0,
-      'Kolej Keris Mas (KKM)_Fakulti Pendidikan (FPEND)': 6.0,
-      'Kolej Keris Mas (KKM)_Fakulti Ekonomi dan Pengurusan (FEP)': 5.0,
-      'Kolej Keris Mas (KKM)_Fakulti Pengajian Islam (FPI)': 5.0,
-      'Kolej Keris Mas (KKM)_Pusat Pengajian Citra Universiti (PPCU)': 6.0,
+          '0.9 km',
+      'Kolej Rahim Kajai (KRK)_Fakulti Undang-Undang (FUU)': '3.8 km',
+      'Kolej Rahim Kajai (KRK)_Fakulti Kejuruteraan dan Alam Bina (FKAB)':
+          '2.3 km',
+      'Kolej Rahim Kajai (KRK)_Fakulti Sains dan Teknologi (FST)': '1.9 km',
+      'Kolej Rahim Kajai (KRK)_Fakulti Pendidikan (FPEND)': '2.3 km',
+      'Kolej Rahim Kajai (KRK)_Fakulti Ekonomi dan Pengurusan (FEP)': '1.3 km',
+      'Kolej Rahim Kajai (KRK)_Fakulti Pengajian Islam (FPI)': '2.6 km',
+      'Kolej Rahim Kajai (KRK)_Pusat Pengajian Citra Universiti (PPCU)':
+          '1.7 km',
+      'Kolej Ibu Zain (KIZ)_Kolej Keris Mas (KKM)': '1.4 km',
+      'Kolej Ibu Zain (KIZ)_Kolej Tun Hussein Onn (KTHO)': '1.3 km',
+      'Kolej Ibu Zain (KIZ)_Fakulti Teknologi dan Sains Maklumat (FTSM)':
+          '1.5 km',
+      'Kolej Ibu Zain (KIZ)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)':
+          '1.5 km',
+      'Kolej Ibu Zain (KIZ)_Fakulti Undang-Undang (FUU)': '4.4 km',
+      'Kolej Ibu Zain (KIZ)_Fakulti Kejuruteraan dan Alam Bina (FKAB)':
+          '2.9 km',
+      'Kolej Ibu Zain (KIZ)_Fakulti Sains dan Teknologi (FST)': '2.6 km',
+      'Kolej Ibu Zain (KIZ)_Fakulti Pendidikan (FPEND)': '2.9 km',
+      'Kolej Ibu Zain (KIZ)_Fakulti Ekonomi dan Pengurusan (FEP)': '1.9 km',
+      'Kolej Ibu Zain (KIZ)_Fakulti Pengajian Islam (FPI)': '3.2 km',
+      'Kolej Ibu Zain (KIZ)_Pusat Pengajian Citra Universiti (PPCU)': '2.3 km',
+      'Kolej Keris Mas (KKM)_Kolej Tun Hussein Onn (KTHO)': '1.6 km',
+      'Kolej Keris Mas (KKM)_Fakulti Teknologi dan Sains Maklumat (FTSM)':
+          '1.8 km',
+      'Kolej Keris Mas (KKM)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)':
+          '1.8 km',
+      'Kolej Keris Mas (KKM)_Fakulti Undang-Undang (FUU)': '4.7 km',
+      'Kolej Keris Mas (KKM)_Fakulti Kejuruteraan dan Alam Bina (FKAB)':
+          '3.2 km',
+      'Kolej Keris Mas (KKM)_Fakulti Sains dan Teknologi (FST)': '2.9 km',
+      'Kolej Keris Mas (KKM)_Fakulti Pendidikan (FPEND)': '3.2 km',
+      'Kolej Keris Mas (KKM)_Fakulti Ekonomi dan Pengurusan (FEP)': '2.2 km',
+      'Kolej Keris Mas (KKM)_Fakulti Pengajian Islam (FPI)': '3.5 km',
+      'Kolej Keris Mas (KKM)_Pusat Pengajian Citra Universiti (PPCU)': '2.6 km',
       'Kolej Tun Hussein Onn (KTHO)_Fakulti Teknologi dan Sains Maklumat (FTSM)':
-          7.0,
+          '0.5 km',
       'Kolej Tun Hussein Onn (KTHO)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)':
-          5.0,
-      'Kolej Tun Hussein Onn (KTHO)_Fakulti Undang-Undang (FUU)': 8.0,
+          '0.5 km',
+      'Kolej Tun Hussein Onn (KTHO)_Fakulti Undang-Undang (FUU)': '3.7 km',
       'Kolej Tun Hussein Onn (KTHO)_Fakulti Kejuruteraan dan Alam Bina (FKAB)':
-          6.0,
-      'Kolej Tun Hussein Onn (KTHO)_Fakulti Sains dan Teknologi (FST)': 5.0,
-      'Kolej Tun Hussein Onn (KTHO)_Fakulti Pendidikan (FPEND)': 5.0,
-      'Kolej Tun Hussein Onn (KTHO)_Fakulti Ekonomi dan Pengurusan (FEP)': 4.0,
-      'Kolej Tun Hussein Onn (KTHO)_Fakulti Pengajian Islam (FPI)': 5.0,
+          '2.2 km',
+      'Kolej Tun Hussein Onn (KTHO)_Fakulti Sains dan Teknologi (FST)':
+          '1.6 km',
+      'Kolej Tun Hussein Onn (KTHO)_Fakulti Pendidikan (FPEND)': '2.1 km',
+      'Kolej Tun Hussein Onn (KTHO)_Fakulti Ekonomi dan Pengurusan (FEP)':
+          '1.0 km',
+      'Kolej Tun Hussein Onn (KTHO)_Fakulti Pengajian Islam (FPI)': '2.2 km',
       'Kolej Tun Hussein Onn (KTHO)_Pusat Pengajian Citra Universiti (PPCU)':
-          5.0,
+          '1.6 km',
     };
-    String key = '${from}_$to';
-    String reverseKey = '${to}_$from';
-    if (priceMap.containsKey(key)) {
-      return priceMap[key]!;
-    } else if (priceMap.containsKey(reverseKey)) {
-      return priceMap[reverseKey]!;
+    String routeKey = '${from}_${to}';
+    String reverseRouteKey = '${to}_${from}';
+
+    String? distanceStr = distanceMap[routeKey] ?? distanceMap[reverseRouteKey];
+
+    if (distanceStr != null) {
+      double distanceKm = double.parse(distanceStr.split(' ')[0]);
+      setState(() {
+        price = 1.5 * distanceKm;
+      });
     } else {
-      return 6.0; // Default price
+      print('Route not found');
     }
   }
 
@@ -364,7 +395,7 @@ class _Bookride2PageState extends State<Bookride2Page> {
               const SizedBox(height: 120),
               Center(
                 child: Text(
-                  'RM $price',
+                  'RM ${price.toStringAsFixed(2)}',
                   style: const TextStyle(
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
@@ -406,3 +437,4 @@ class _Bookride2PageState extends State<Bookride2Page> {
     );
   }
 }
+
