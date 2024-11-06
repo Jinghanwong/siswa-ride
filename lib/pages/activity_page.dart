@@ -98,13 +98,25 @@ class _ActivityPageState extends State<ActivityPage> with SingleTickerProviderSt
         children: [
           Row(
             children: [
-              Icon(Icons.directions_car, color: status == 'Successful' ? Colors.blue : Colors.red),
+              Icon(
+                Icons.directions_car,
+                color: status == 'Successful' ? Colors.blue : Colors.red,
+              ),
               const SizedBox(width: 10),
-              Text(location, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Expanded(
+                child: Text(
+                  location,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis, // Prevents overflow
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 5),
-          Text(date, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+          Text(
+            date,
+            style: const TextStyle(fontSize: 14, color: Colors.grey),
+          ),
           const SizedBox(height: 10),
           Center(
             child: ElevatedButton(
@@ -116,6 +128,12 @@ class _ActivityPageState extends State<ActivityPage> with SingleTickerProviderSt
       ),
     );
   }
+}
+
+void main() {
+  runApp(const MaterialApp(
+    home: ActivityPage(),
+  ));
 }
 
 void main() {
