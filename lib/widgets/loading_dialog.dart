@@ -23,19 +23,18 @@ class LoadingDialog extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(
-                width: 5,
-              ),
               const CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
-              const SizedBox(
-                width: 8,
-              ),
-              Text(
-                messageText,
-                style: const TextStyle(fontSize: 16, color: Colors.white),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  messageText,
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
+                  overflow: TextOverflow.ellipsis, // Prevents overflow by trimming the text
+                ),
               ),
             ],
           ),
