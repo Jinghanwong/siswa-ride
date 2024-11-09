@@ -7,7 +7,8 @@ class ActivityPage extends StatefulWidget {
   State<ActivityPage> createState() => _ActivityPageState();
 }
 
-class _ActivityPageState extends State<ActivityPage> with SingleTickerProviderStateMixin {
+class _ActivityPageState extends State<ActivityPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -73,15 +74,18 @@ class _ActivityPageState extends State<ActivityPage> with SingleTickerProviderSt
   Widget _buildCompletedTab() {
     return ListView(
       children: [
-        _buildActivityItem('Successful', 'Kolej Ibrahim Yaakob (KIY), UKM', '20/5/2024'),
-        _buildActivityItem('Successful', 'Fakulti Teknologi dan Sains Maklumat (FTSM), UKM', '25/5/2024'),
+        _buildActivityItem(
+            'Successful', 'Kolej Ibrahim Yaakob (KIY), UKM', '20/5/2024'),
+        _buildActivityItem('Successful',
+            'Fakulti Teknologi dan Sains Maklumat (FTSM), UKM', '25/5/2024'),
       ],
     );
   }
 
   Widget _buildCancelledTab() {
     return const Center(
-      child: Text('No cancelled activities', style: TextStyle(color: Colors.white)),
+      child: Text('No cancelled activities',
+          style: TextStyle(color: Colors.white)),
     );
   }
 
@@ -106,7 +110,8 @@ class _ActivityPageState extends State<ActivityPage> with SingleTickerProviderSt
               Expanded(
                 child: Text(
                   location,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
                   overflow: TextOverflow.ellipsis, // Prevents overflow
                 ),
               ),
@@ -128,12 +133,6 @@ class _ActivityPageState extends State<ActivityPage> with SingleTickerProviderSt
       ),
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: ActivityPage(),
-  ));
 }
 
 void main() {

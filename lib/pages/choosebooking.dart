@@ -90,6 +90,7 @@ class _ChooseBookingPageState extends State<ChooseBookingPage> {
           builder: (context) => AcceptedBookingPage(
             userId: userId,
             bookingId: bookingId,
+            bookingDetails: booking, // Pass the booking details here
           ),
         ),
       );

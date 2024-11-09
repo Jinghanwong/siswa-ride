@@ -36,6 +36,16 @@ class MyApp extends StatelessWidget {
           seedColor: const Color.fromARGB(255, 56, 82, 197),
         ),
         useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          iconTheme: IconThemeData(color: Colors.white), // Icons to white
+          titleTextStyle: TextStyle(
+            color: Colors.white, // App bar title color
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          backgroundColor:
+              Color.fromARGB(255, 56, 82, 197), // App bar background
+        ),
       ),
       home: LaunchScreen(),
     );
