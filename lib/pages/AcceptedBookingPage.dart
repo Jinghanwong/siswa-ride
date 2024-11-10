@@ -134,8 +134,7 @@ class _AcceptedBookingPageState extends State<AcceptedBookingPage> {
               Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: AssetImage(
-                        'assets/default_profile.png'), // Replace with a default image
+                    backgroundImage: AssetImage('assets/default_profile.png'), // Replace with a default image
                     radius: 30,
                   ),
                   const SizedBox(width: 15),
@@ -153,13 +152,11 @@ class _AcceptedBookingPageState extends State<AcceptedBookingPage> {
                         ),
                         Row(
                           children: [
-                            Icon(Icons.star,
-                                color: Colors.yellow[700], size: 18),
+                            Icon(Icons.star, color: Colors.yellow[700], size: 18),
                             const SizedBox(width: 5),
                             const Text(
                               "4.9",
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
+                              style: TextStyle(fontSize: 16, color: Colors.white),
                             ),
                           ],
                         ),
@@ -185,22 +182,16 @@ class _AcceptedBookingPageState extends State<AcceptedBookingPage> {
                 ],
               ),
               const SizedBox(height: 20),
-              buildInfoCard('From', widget.bookingDetails.fromLocation,
-                  icon: Icons.my_location_outlined),
-              buildInfoCard('To', widget.bookingDetails.toLocation,
-                  icon: Icons.location_on),
-              buildInfoCard(
-                  'Gender Preference', widget.bookingDetails.genderPreference),
-              buildInfoCard('Additional Info',
-                  widget.bookingDetails.additionalInformation),
-              buildInfoCard(
-                  'Payment Option', widget.bookingDetails.paymentOption),
+              buildInfoCard('From', widget.bookingDetails.fromLocation, icon: Icons.my_location_outlined),
+              buildInfoCard('To', widget.bookingDetails.toLocation, icon: Icons.location_on),
+              buildInfoCard('Gender Preference', widget.bookingDetails.genderPreference),
+              buildInfoCard('Additional Info', widget.bookingDetails.additionalInformation),
+              buildInfoCard('Payment Option', widget.bookingDetails.paymentOption),
               Card(
                 color: Colors.white.withOpacity(0.9),
                 elevation: 6,
                 margin: const EdgeInsets.symmetric(vertical: 10),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Center(
@@ -223,8 +214,7 @@ class _AcceptedBookingPageState extends State<AcceptedBookingPage> {
                       // Code to chat with customer
                     },
                     icon: const Icon(Icons.chat, color: Colors.black),
-                    label: const Text("Chat with customer",
-                        style: TextStyle(color: Colors.black)),
+                    label: const Text("Chat with customer", style: TextStyle(color: Colors.black)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       side: const BorderSide(color: Colors.grey),
@@ -232,8 +222,7 @@ class _AcceptedBookingPageState extends State<AcceptedBookingPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 18, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
                     ),
                   ),
                   const SizedBox(width: 15),
@@ -250,8 +239,7 @@ class _AcceptedBookingPageState extends State<AcceptedBookingPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     ),
                   ),
                 ],
@@ -269,8 +257,7 @@ class _AcceptedBookingPageState extends State<AcceptedBookingPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
                 ),
               ),
             ],

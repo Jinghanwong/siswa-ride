@@ -38,7 +38,9 @@ class _ChooseBookingPageState extends State<ChooseBookingPage> {
           usersBookingsMap.forEach((userId, userBookings) {
             if (userBookings is Map<dynamic, dynamic>) {
               userBookings.forEach((bookingId, bookingData) {
-                if (bookingData is Map<dynamic, dynamic>) {
+                if (bookingData is Map<dynamic, dynamic> &&
+                    bookingData["status"] != "accepted") {
+                  // Exclude accepted bookings
                   BookingDetails bookingDetails =
                       BookingDetails.fromMap(bookingData);
                   fetchedBookingList.add({
