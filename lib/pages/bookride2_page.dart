@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:intl/intl.dart';
 import 'package:siswa_ride/pages/bookride3_page.dart';
 import 'package:siswa_ride/booking_details.dart';
 
@@ -69,6 +70,7 @@ class _Bookride2PageState extends State<Bookride2Page> {
       'Kolej Ibrahim Yaakub (KIY)_Kolej Rahim Kajai (KRK)': '2.1 km',
       'Kolej Ibrahim Yaakub (KIY)_Kolej Keris Mas (KKM)': '3.2 km',
       'Kolej Ibrahim Yaakub (KIY)_Kolej Tun Hussein Onn (KTHO)': '1.7 km',
+      'Kolej Ibrahim Yaakub (KIY)_Kolej Burhanuddin Helmi (KBH)': '0.7 km',
       'Kolej Ibrahim Yaakub (KIY)_Fakulti Teknologi dan Sains Maklumat (FTSM)':
           '1.5 km',
       'Kolej Ibrahim Yaakub (KIY)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)':
@@ -239,10 +241,78 @@ class _Bookride2PageState extends State<Bookride2Page> {
       'Kolej Tun Hussein Onn (KTHO)_Fakulti Pengajian Islam (FPI)': '2.2 km',
       'Kolej Tun Hussein Onn (KTHO)_Pusat Pengajian Citra Universiti (PPCU)':
           '1.6 km',
+      'Fakulti Teknologi dan Sains Maklumat (FTSM)_Fakulti Sains Sosial dan Kemanusiaan (FSSK)':
+          '2.3 km',
+      'Fakulti Teknologi dan Sains Maklumat (FTSM)_Fakulti Undang-Undang (FUU)':
+          '1.4 km',
+      'Fakulti Teknologi dan Sains Maklumat (FTSM)_Fakulti Kejuruteraan dan Alam Bina (FKAB)':
+          '0.8 km',
+      'Fakulti Teknologi dan Sains Maklumat (FTSM)_Fakulti Sains dan Teknologi (FST)':
+          '1.7 km',
+      'Fakulti Teknologi dan Sains Maklumat (FTSM)_Fakulti Pendidikan (FPEND)':
+          '1.5 km',
+      'Fakulti Teknologi dan Sains Maklumat (FTSM)_Fakulti Ekonomi dan Pengurusan (FEP)':
+          '2.8 km',
+      'Fakulti Teknologi dan Sains Maklumat (FTSM)_Fakulti Pengajian Islam (FPI)':
+          '2.4 km',
+      'Fakulti Teknologi dan Sains Maklumat (FTSM)_Pusat Pengajian Citra Universiti (PPCU)':
+          '1.4 km',
+      'Fakulti Sains Sosial dan Kemanusiaan (FSSK)_Fakulti Undang-Undang (FUU)':
+          '3.4 km',
+      'Fakulti Sains Sosial dan Kemanusiaan (FSSK)_Fakulti Kejuruteraan dan Alam Bina (FKAB)':
+          '2.4 km',
+      'Fakulti Sains Sosial dan Kemanusiaan (FSSK)_Fakulti Sains dan Teknologi (FST)':
+          '1.1 km',
+      'Fakulti Sains Sosial dan Kemanusiaan (FSSK)_Fakulti Pendidikan (FPEND)':
+          '2.3 km',
+      'Fakulti Sains Sosial dan Kemanusiaan (FSSK)_Fakulti Ekonomi dan Pengurusan (FEP)':
+          '0.5 km',
+      'Fakulti Sains Sosial dan Kemanusiaan (FSSK)_Fakulti Pengajian Islam (FPI)':
+          '1.8 km',
+      'Fakulti Sains Sosial dan Kemanusiaan (FSSK)_Pusat Pengajian Citra Universiti (PPCU)':
+          '1.8 km',
+      'Fakulti Undang-Undang (FUU)_Fakulti Kejuruteraan dan Alam Bina (FKAB)':
+          '1.8 km',
+      'Fakulti Undang-Undang (FUU)_Fakulti  Sains dan Teknologi (FST)':
+          '2.7 km',
+      'Fakulti Undang-Undang (FUU)_Fakulti  Pendidikan (FPEND)': '2.5 km',
+      'Fakulti Undang-Undang (FUU)_Fakulti Ekonomi dan Pengurusan (FEP)':
+          '3.8 km',
+      'Fakulti Undang-Undang (FUU)_Fakulti Pengajian Islam (FPI)': '3.4 km',
+      'Fakulti Undang-Undang (FUU)_Pusat Pengajian Citra Universiti (PPCU)':
+          '2.4 km',
+      'Fakulti Kejuruteraan dan Alam Bina (FKAB)_Fakulti Sains dan Teknologi (FST)':
+          '2.0 km',
+      'Fakulti Kejuruteraan dan Alam Bina (FKAB)_Fakulti Pendidikan (FPEND)':
+          '1.3 km',
+      'Fakulti Kejuruteraan dan Alam Bina (FKAB)_Fakulti Ekonomi dan Pengurusan (FEP)':
+          '2.6 km',
+      'Fakulti Kejuruteraan dan Alam Bina (FKAB)_Fakulti Pengajian Islam (FPI)':
+          '2.6 km',
+      'Fakulti Kejuruteraan dan Alam Bina (FKAB)_Pusat Pengajian Citra Universiti (PPCU)':
+          '1.2 km',
+      'Fakulti Sains dan Teknologi (FST)_Fakulti Pendidikan (FPEND)': '1.4 km',
+      'Fakulti Sains dan Teknologi (FST)_Fakulti Ekonomi dan Pengurusan (FEP)':
+          '2.1 km',
+      'Fakulti Sains dan Teknologi (FST)_Fakulti Pengajian Islam (FPI)':
+          '0.9 km',
+      'Fakulti Sains dan Teknologi (FST)_Pusat Pengajian Citra Universiti (PPCU)':
+          '0.9 km',
+      'Fakulti Pendidikan (FPEND)_Fakulti Ekonomi dan Pengurusan (FEP)':
+          '2.0 km',
+      'Fakulti Pendidikan (FPEND)_Fakulti Pengajian Islam (FPI)': '2.0 km',
+      'Fakulti Pendidikan (FPEND)_Pusat Pengajian Citra Universiti (PPCU)':
+          '0.7 km',
+      'Fakulti Ekonomi dan Pengurusan (FEP)_Fakulti Pengajian Islam (FPI)':
+          '1.3 km',
+      'Fakulti Ekonomi dan Pengurusan (FEP)_Pusat Pengajian Citra Universiti (PPCU)':
+          '1.3 km',
+      'Fakulti Pengajian Islam (FPI)_Pusat Pengajian Citra Universiti (PPCU)':
+          '0.6 km',
     };
+
     String routeKey = '${from}_${to}';
     String reverseRouteKey = '${to}_${from}';
-
     String? distanceStr = distanceMap[routeKey] ?? distanceMap[reverseRouteKey];
 
     if (distanceStr != null) {
@@ -261,7 +331,10 @@ class _Bookride2PageState extends State<Bookride2Page> {
       DatabaseReference bookingsRef =
           FirebaseDatabase.instance.ref().child("bookings").child(user.uid);
 
+      String currentDate = getCurrentDate(); // 获取当前日期
+
       BookingDetails bookingDetails = BookingDetails(
+        userId: user.uid, // 传递 userId
         fromLocation: widget.fromLocation!,
         toLocation: widget.toLocation!,
         genderPreference: widget.genderPreference!,
@@ -269,6 +342,7 @@ class _Bookride2PageState extends State<Bookride2Page> {
         userName: userName,
         price: price,
         paymentOption: widget.paymentOption!,
+        bookingDate: currentDate,
       );
 
       print('Saving booking details with userName: $userName');
@@ -291,15 +365,27 @@ class _Bookride2PageState extends State<Bookride2Page> {
     }
   }
 
+  String getCurrentDate() {
+    final now = DateTime.now();
+    final formatter = DateFormat('EEE, d MMM yy');
+    return formatter.format(now); // 返回格式化后的日期
+  }
+
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ride Details'),
         backgroundColor: const Color.fromARGB(255, 48, 98, 207),
+        elevation: 0, // 去除阴影
       ),
       body: SingleChildScrollView(
         child: Container(
+          width: screenWidth,
+          height: screenHeight,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               colors: [Color(0xFF82B1FF), Color(0xFF2962FF)],
@@ -315,84 +401,106 @@ class _Bookride2PageState extends State<Bookride2Page> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20), // Increased vertical spacing
-              Row(
-                children: [
-                  const Icon(Icons.my_location_outlined, color: Colors.white),
-                  const SizedBox(width: 8),
-                  Text(
+              const SizedBox(height: 20),
+              Card(
+                elevation: 4, // 增加阴影
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12), // 圆角
+                ),
+                child: ListTile(
+                  leading: const Icon(Icons.my_location_outlined,
+                      color: Colors.blue),
+                  title: Text(
                     'From: ${widget.fromLocation}',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
-                ],
+                ),
               ),
-              const SizedBox(height: 30), // Increased vertical spacing
-              Row(
-                children: [
-                  const Icon(Icons.location_on, color: Colors.white),
-                  const SizedBox(width: 8),
-                  Text(
+              const SizedBox(height: 20),
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  leading: const Icon(Icons.location_on, color: Colors.blue),
+                  title: Text(
                     'To: ${widget.toLocation}',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
-                ],
+                ),
               ),
-              const SizedBox(height: 30), // Increased vertical spacing
-              Row(
-                children: [
-                  const Icon(Icons.person, color: Colors.white),
-                  const SizedBox(width: 8),
-                  Text(
+              const SizedBox(height: 20),
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  leading: const Icon(Icons.person, color: Colors.blue),
+                  title: Text(
                     'Driver Gender Preference: ${widget.genderPreference}',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
-                ],
+                ),
               ),
-              const SizedBox(height: 30), // Increased vertical spacing
-              Row(
-                children: [
-                  const Icon(Icons.payment, color: Colors.white),
-                  const SizedBox(width: 8),
-                  Text(
+              const SizedBox(height: 20),
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  leading: const Icon(Icons.payment, color: Colors.blue),
+                  title: Text(
                     'Payment Option: ${widget.paymentOption}',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 30), // Increased vertical spacing
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Additional information about your ride',
-                  hintStyle: const TextStyle(color: Colors.white),
-                  border: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white.withOpacity(0.2),
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    additionalInformation = value;
-                  });
-                },
               ),
-              const SizedBox(height: 120),
+              const SizedBox(height: 20),
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Additional information about your ride',
+                      hintStyle: const TextStyle(color: Colors.black),
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.2),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        additionalInformation = value;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40),
               Center(
                 child: Text(
                   'RM ${price.toStringAsFixed(2)}',
@@ -420,6 +528,9 @@ class _Bookride2PageState extends State<Bookride2Page> {
                     backgroundColor: const Color.fromARGB(255, 48, 98, 207),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 80, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12), // 圆角
+                    ),
                   ),
                   child: const Text(
                     "Book Now",
@@ -437,4 +548,5 @@ class _Bookride2PageState extends State<Bookride2Page> {
     );
   }
 }
+
 
