@@ -1,26 +1,33 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:siswa_ride/driver_info.dart';
+import 'package:siswa_ride/pages/chat_page.dart';
+import 'package:siswa_ride/pages/payment_page.dart';
 
 class Bookride4Page extends StatefulWidget {
   final DriverInfo driverInfo;
   final String bookingId;
+  final String userId;
 
   const Bookride4Page({
     super.key,
     required this.driverInfo,
     required this.bookingId,
+    required this.userId,
   });
 
   @override
   State<Bookride4Page> createState() => _Bookride4PageState();
 }
 
-class _Bookride4PageState extends State<Bookride4Page> with SingleTickerProviderStateMixin {
+class _Bookride4PageState extends State<Bookride4Page>
+    with SingleTickerProviderStateMixin {
   String? _driverPhotoUrl;
   final DatabaseReference dbRef = FirebaseDatabase.instance.ref();
   late AnimationController _controller;
   late Animation<double> _animation;
+  late StreamSubscription<DatabaseEvent> _finishStatusSubscription;
 
   @override
   void initState() {
@@ -36,26 +43,26 @@ class _Bookride4PageState extends State<Bookride4Page> with SingleTickerProvider
       curve: Curves.easeInOut,
     );
     _controller.forward();
+    _setupFinishStatusListener();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _finishStatusSubscription.cancel();
     super.dispose();
   }
 
   Future<void> _loadDriverPhoto() async {
     try {
-      DatabaseEvent event = await dbRef
-          .child('users')
-          .child(widget.driverInfo.driverId)
-          .once();
-      
+      DatabaseEvent event =
+          await dbRef.child('users').child(widget.driverInfo.driverId).once();
+
       DataSnapshot snapshot = event.snapshot;
 
       if (snapshot.exists && snapshot.value != null) {
         Map<dynamic, dynamic> rawData = snapshot.value as Map<dynamic, dynamic>;
-        
+
         setState(() {
           _driverPhotoUrl = rawData['driverPhotoUrl']?.toString();
         });
@@ -66,10 +73,15 @@ class _Bookride4PageState extends State<Bookride4Page> with SingleTickerProvider
   }
 
   void _listenForArrivalNotification() {
-    dbRef.child('notifications').child(widget.bookingId).onValue.listen((event) {
+    dbRef
+        .child('notifications')
+        .child(widget.bookingId)
+        .onValue
+        .listen((event) {
       DataSnapshot snapshot = event.snapshot;
       if (snapshot.exists && snapshot.value != null) {
-        Map<dynamic, dynamic> notification = snapshot.value as Map<dynamic, dynamic>;
+        Map<dynamic, dynamic> notification =
+            snapshot.value as Map<dynamic, dynamic>;
         if (notification['type'] == 'driver_arrived') {
           _showArrivedMessage(notification['message']);
         }
@@ -104,7 +116,8 @@ class _Bookride4PageState extends State<Bookride4Page> with SingleTickerProvider
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK', style: TextStyle(color: Color(0xFF0039CB))),
+              child:
+                  const Text('OK', style: TextStyle(color: Color(0xFF0039CB))),
             ),
           ],
         );
@@ -177,7 +190,8 @@ class _Bookride4PageState extends State<Bookride4Page> with SingleTickerProvider
               ),
               const SizedBox(height: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.blue.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
@@ -298,13 +312,65 @@ class _Bookride4PageState extends State<Bookride4Page> with SingleTickerProvider
     );
   }
 
+  void _onChatWithDriver() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatPage(
+          bookingId: widget.bookingId,
+          senderId: widget.driverInfo.driverId,
+          receiverId: widget.driverInfo.driverId,
+        ),
+      ),
+    );
+  }
+
+  void _onFinishRide() {
+    // 更新Firebase中的finish_requested状态
+    DatabaseReference bookingRef = FirebaseDatabase.instance
+        .ref()
+        .child("bookings")
+        .child(widget.userId)
+        .child(widget.bookingId);
+
+    bookingRef.update({
+      "finish_requested": true,
+    }).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Waiting for driver to confirm...')),
+      );
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to request ride finish: $error')),
+      );
+    });
+  }
+
+  void _setupFinishStatusListener() {
+    DatabaseReference bookingRef = FirebaseDatabase.instance
+        .ref()
+        .child("bookings")
+        .child(widget.userId)
+        .child(widget.bookingId);
+
+    _finishStatusSubscription =
+        bookingRef.child('status').onValue.listen((event) {
+      if (event.snapshot.value == 'finished') {
+        // Navigate to PaymentPage
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const PaymentPage()),
+          (route) => false,
+        );
+      }
+    });
+  }
+
   Widget _buildActionButtons() {
     return Column(
       children: [
         ElevatedButton.icon(
-          onPressed: () {
-            // Chat functionality
-          },
+          onPressed: _onChatWithDriver,
           icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
           label: const Text(
             "Chat with Driver",
@@ -352,7 +418,7 @@ class _Bookride4PageState extends State<Bookride4Page> with SingleTickerProvider
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
-                  // Finish ride functionality
+                  _onFinishRide();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
@@ -443,3 +509,4 @@ class _Bookride4PageState extends State<Bookride4Page> with SingleTickerProvider
     );
   }
 }
+
