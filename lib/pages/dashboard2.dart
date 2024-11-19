@@ -4,9 +4,8 @@ import 'package:siswa_ride/pages/earning_page.dart';
 import 'package:siswa_ride/pages/choosebooking.dart';
 
 class Dashboard2 extends StatefulWidget {
-  final String userName; // Declare userName as a property
-
-  const Dashboard2({super.key, required this.userName});
+  final String userName;
+  const Dashboard2({Key? key, required this.userName}) : super(key: key);
 
   @override
   State<Dashboard2> createState() => _Dashboard2State();
@@ -27,7 +26,6 @@ class _Dashboard2State extends State<Dashboard2>
   @override
   void initState() {
     super.initState();
-
     controller = TabController(length: 3, vsync: this);
   }
 
@@ -43,10 +41,10 @@ class _Dashboard2State extends State<Dashboard2>
       body: TabBarView(
         physics: const NeverScrollableScrollPhysics(),
         controller: controller,
-        children: const [
-          ChooseBookingPage(),
-          EarningPage(),
-          AccountPage2(),
+        children: [
+          const ChooseBookingPage(),
+          EarningPage(userName: widget.userName), // 传递 userName 到 EarningPage
+          const AccountPage2(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -58,7 +56,6 @@ class _Dashboard2State extends State<Dashboard2>
               icon: Icon(Icons.account_circle_rounded), label: "Account"),
         ],
         currentIndex: indexSelected,
-        //backgroundColor: Colors.grey,
         unselectedItemColor: Colors.black,
         selectedItemColor: const Color.fromARGB(255, 48, 98, 207),
         showSelectedLabels: true,
