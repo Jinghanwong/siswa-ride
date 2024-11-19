@@ -28,7 +28,7 @@ class _ActivityPageState extends State<ActivityPage> with SingleTickerProviderSt
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF82B1FF), Color(0xFF2962FF)],
+            colors: [Color(0xFF2962FF), Color(0xFF64B5F6)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -128,12 +128,6 @@ class _ActivityPageState extends State<ActivityPage> with SingleTickerProviderSt
       ),
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: ActivityPage(),
-  ));
 }
 
 void main() {
