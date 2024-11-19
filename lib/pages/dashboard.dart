@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:siswa_ride/pages/account_page.dart';
 import 'package:siswa_ride/pages/activity_page.dart';
 import 'package:siswa_ride/pages/mainpage.dart';
-import 'package:siswa_ride/pages/scammerlist_page.dart'; // Adjust import path as per your project
 
 class Dashboard extends StatefulWidget {
   final String userName; // Declare userName as a property
 
-  const Dashboard({super.key, required this.userName});
+  const Dashboard({Key? key, required this.userName}) : super(key: key);
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -21,7 +20,7 @@ class _DashboardState extends State<Dashboard>
   @override
   void initState() {
     super.initState();
-    controller = TabController(length: 4, vsync: this);
+    controller = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -39,7 +38,6 @@ class _DashboardState extends State<Dashboard>
         children: [
           MainPage(userName: widget.userName), // Pass userName to MainPage
           ActivityPage(),
-          ScammerListPage(),
           AccountPage(),
         ],
       ),
@@ -48,8 +46,6 @@ class _DashboardState extends State<Dashboard>
           BottomNavigationBarItem(
               icon: Icon(Icons.car_rental), label: "Ride Booking"),
           BottomNavigationBarItem(icon: Icon(Icons.list), label: "Activity"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.library_books_outlined), label: "ScammerList"),
           BottomNavigationBarItem(
               icon: Icon(Icons.account_circle_rounded), label: "Account"),
         ],
