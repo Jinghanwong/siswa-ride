@@ -1,4 +1,3 @@
-// main.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'authentication/launch_screen.dart';
@@ -7,16 +6,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    await Firebase.initializeApp(
-      options: const FirebaseOptions(
-        apiKey: "AIzaSyA2harizq0dPby6xTpORihdLuFoetjTy78",
-        appId: "1:857891438018:android:e63570e7bd52f3e4e22a5b",
-        messagingSenderId: "857891438018",
-        projectId: "siswa-ride-ce388",
-        databaseURL: "https://siswa-ride-ce388-default-rtdb.firebaseio.com",
-        storageBucket: 'gs://siswa-ride-ce388.appspot.com',
-      ),
-    );
+    await Firebase.initializeApp();
     runApp(const MyApp());
   } catch (e) {
     print('Firebase initialization error: $e');
@@ -24,7 +14,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +25,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromARGB(255, 56, 82, 197),
         ),
-        useMaterial3: true,
+        useMaterial3: true, // 确保启用 Material 3
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          centerTitle: true,
+          iconTheme: IconThemeData(color: Colors.white),
+          elevation: 0, // 确保无阴影
+        ),
       ),
       home: LaunchScreen(),
     );
