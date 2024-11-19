@@ -1,6 +1,5 @@
-// booking_details_widget.dart
 import 'package:flutter/material.dart';
-import 'booking_details.dart';
+import 'package:siswa_ride/booking_details.dart';
 
 class BookingDetailsWidget extends StatelessWidget {
   final BookingDetails bookingDetails;
@@ -8,11 +7,11 @@ class BookingDetailsWidget extends StatelessWidget {
   final VoidCallback onDecline;
 
   const BookingDetailsWidget({
-    super.key,
+    Key? key,
     required this.bookingDetails,
     required this.onAccept,
     required this.onDecline,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
