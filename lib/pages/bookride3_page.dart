@@ -1,6 +1,5 @@
-// bookride3_page.dart
 import 'dart:async';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,40 +15,67 @@ class Bookride3Page extends StatefulWidget {
 
 class _Bookride3PageState extends State<Bookride3Page> {
   StreamSubscription<DatabaseEvent>? _bookingSubscription;
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? _userSubscription;
+  String? _userId;
 
-  @override
+   @override
   void initState() {
     super.initState();
     _listenToBookingStatus();
   }
 
   void _listenToBookingStatus() {
-    final User? currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) return;
+    _getUserId().then((_) {
+      if (_userId != null) {
+        _listenToBookings();
+      }
+    });
+  }
 
-    // 获取用户最新的booking
-    DatabaseReference bookingsRef = FirebaseDatabase.instance
-        .ref()
-        .child("bookings")
-        .child(currentUser.uid);
+  Future<void> _getUserId() async {
+    final user = await FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      _userId = user.uid;
+      _listenToUserData();
+    }
+  }
 
-    // 监听最新的booking
-    _bookingSubscription = bookingsRef.limitToLast(1).onValue.listen((event) {
+  void _listenToBookings() {
+  if (_userId == null) return;
+
+  DatabaseReference bookingsRef = FirebaseDatabase.instance
+      .ref()
+      .child("bookings")
+      .child(_userId!);
+
+  _bookingSubscription = bookingsRef.limitToLast(1).onValue.listen((event) {
+    if (!mounted) return;
+
+    final data = event.snapshot.value as Map<dynamic, dynamic>?;
+    if (data == null) return;
+
+    final bookingEntry = data.entries.first;
+    final bookingId = bookingEntry.key;
+    final bookingData = bookingEntry.value as Map<dynamic, dynamic>;
+
+    if (bookingData['status'] == 'accepted' && bookingData['driverId'] != null) {
+      _fetchDriverInfoAndNavigate(
+        driverId: bookingData['driverId'],
+        bookingId: bookingId,
+      );
+    }
+  });
+}
+
+  void _listenToUserData() {
+    final userRef = FirebaseFirestore.instance.collection('users').doc(_userId);
+    _userSubscription = userRef.snapshots().listen((snapshot) {
       if (!mounted) return;
-      
-      final data = event.snapshot.value as Map<dynamic, dynamic>?;
-      if (data == null) return;
-
-      // 获取最新booking的key和数据
-      final bookingEntry = data.entries.first;
-      final bookingId = bookingEntry.key;
-      final bookingData = bookingEntry.value as Map<dynamic, dynamic>;
-
-      if (bookingData['status'] == 'accepted' && bookingData['driverId'] != null) {
-        // 获取司机信息
+      if (snapshot.data() != null) {
+        // Use the user data as needed
         _fetchDriverInfoAndNavigate(
-          driverId: bookingData['driverId'],
-          bookingId: bookingId,
+          driverId: snapshot.data()!['driverId'],
+          bookingId: snapshot.data()!['bookingId'],
         );
       }
     });
@@ -69,7 +95,7 @@ class _Bookride3PageState extends State<Bookride3Page> {
 
     if (driverSnapshot.value != null) {
       final driverData = driverSnapshot.value as Map<dynamic, dynamic>;
-      
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -84,6 +110,7 @@ class _Bookride3PageState extends State<Bookride3Page> {
               driverId: driverId,
             ),
             bookingId: bookingId,
+            userId: _userId!,
           ),
         ),
       );
@@ -92,9 +119,11 @@ class _Bookride3PageState extends State<Bookride3Page> {
 
   @override
   void dispose() {
+    _userSubscription?.cancel();
     _bookingSubscription?.cancel();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -115,3 +144,4 @@ class _Bookride3PageState extends State<Bookride3Page> {
     );
   }
 }
+
