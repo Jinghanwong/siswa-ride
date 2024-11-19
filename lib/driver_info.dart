@@ -1,4 +1,3 @@
-// driver_info.dart
 class DriverInfo {
   final String driverId;
   final String name;
