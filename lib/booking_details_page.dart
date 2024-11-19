@@ -1,4 +1,3 @@
-// booking_details_page.dart
 import 'package:flutter/material.dart';
 import 'booking_details.dart';
 import 'fetch_booking_details.dart';
