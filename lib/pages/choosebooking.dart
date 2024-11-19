@@ -1,10 +1,9 @@
-// choose_booking_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:siswa_ride/booking_details.dart';
 import 'package:siswa_ride/booking_details_widget.dart';
 import 'package:siswa_ride/pages/AcceptedBookingPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ChooseBookingPage extends StatefulWidget {
   const ChooseBookingPage({super.key});
@@ -16,11 +15,40 @@ class ChooseBookingPage extends StatefulWidget {
 class _ChooseBookingPageState extends State<ChooseBookingPage> {
   List<Map<String, dynamic>> bookingList = [];
   bool isLoading = true;
+  String? currentDriverId; // 添加这个变量存储当前司机ID
+  String? driverGender;
 
   @override
   void initState() {
     super.initState();
     fetchBookingDetails();
+    currentDriverId = FirebaseAuth.instance.currentUser?.uid;
+    fetchBookingDetails();
+    fetchDriverGender();
+  }
+
+  // 获取当前司机的性别信息
+  void fetchDriverGender() async {
+    if (currentDriverId != null) {
+      DatabaseReference driverRef = FirebaseDatabase.instance
+          .ref()
+          .child("users")
+          .child(currentDriverId!);
+
+      DataSnapshot snapshot = await driverRef.get();
+      if (snapshot.value != null) {
+        Map driverData = snapshot.value as Map;
+        if (driverData["userType"] == "Driver") {
+          setState(() {
+            driverGender = driverData["gender"];
+            print("Driver Gender: $driverGender"); // 调试输出司机性别
+          });
+
+          // 确保 driverGender 获取后再调用 fetchBookingDetails
+          fetchBookingDetails();
+        }
+      }
+    }
   }
 
   void fetchBookingDetails() {
@@ -33,19 +61,33 @@ class _ChooseBookingPageState extends State<ChooseBookingPage> {
         List<Map<String, dynamic>> fetchedBookingList = [];
         Map<dynamic, dynamic>? usersBookingsMap =
             snapshot.value as Map<dynamic, dynamic>?;
+            
 
         if (usersBookingsMap != null) {
           usersBookingsMap.forEach((userId, userBookings) {
             if (userBookings is Map<dynamic, dynamic>) {
               userBookings.forEach((bookingId, bookingData) {
-                if (bookingData is Map<dynamic, dynamic>) {
-                  BookingDetails bookingDetails =
-                      BookingDetails.fromMap(bookingData);
-                  fetchedBookingList.add({
-                    "bookingDetails": bookingDetails,
-                    "userId": userId,
-                    "bookingId": bookingId,
-                  });
+                if (bookingId != 'messages' &&
+                    bookingData is Map<dynamic, dynamic> &&
+                    bookingData["status"] != "accepted") {
+                  String genderPreference =
+                      bookingData["genderPreference"]?.toString() ??
+                          "No Preference";
+                  print(
+                      "Booking Gender Preference: $genderPreference"); // 打印调试信息
+
+                  if ((genderPreference == "No Preference") ||
+                      (genderPreference == "Male" && driverGender == "Male") ||
+                      (genderPreference == "Female" &&
+                          driverGender == "Female")) {
+                    BookingDetails bookingDetails =
+                        BookingDetails.fromMap(bookingData);
+                    fetchedBookingList.add({
+                      "bookingDetails": bookingDetails,
+                      "userId": userId,
+                      "bookingId": bookingId,
+                    });
+                  }
                 }
               });
             }
@@ -74,13 +116,23 @@ class _ChooseBookingPageState extends State<ChooseBookingPage> {
 
   void onAcceptBooking(
       String userId, String bookingId, BookingDetails booking) {
+    if (currentDriverId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error: Driver not logged in')),
+      );
+      return;
+    }
+
     DatabaseReference bookingRef = FirebaseDatabase.instance
         .ref()
         .child("bookings")
         .child(userId)
         .child(bookingId);
 
-    bookingRef.update({"status": "accepted"}).then((_) {
+    bookingRef.update({
+      "status": "accepted",
+      "driverId": currentDriverId,
+    }).then((_) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Accepted booking from ${booking.userName}')),
       );
@@ -90,6 +142,8 @@ class _ChooseBookingPageState extends State<ChooseBookingPage> {
           builder: (context) => AcceptedBookingPage(
             userId: userId,
             bookingId: bookingId,
+            bookingDetails: booking,
+            bookingTimeInMinutes: 0,
           ),
         ),
       );
@@ -106,7 +160,7 @@ class _ChooseBookingPageState extends State<ChooseBookingPage> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF82B1FF), Color(0xFF2962FF)],
+            colors: [Color(0xFF2962FF), Color(0xFF64B5F6)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
