@@ -1,19 +1,24 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:siswa_ride/booking_details.dart';
+import 'package:siswa_ride/pages/cancellationbooking_page.dart';
+import 'package:siswa_ride/pages/chat_page.dart';
 import 'dart:async';
+
 import 'package:siswa_ride/pages/choosebooking.dart';
 
 class AcceptedBookingPage extends StatefulWidget {
   final String bookingId;
   final String userId;
   final BookingDetails bookingDetails;
+  final int bookingTimeInMinutes;
 
   const AcceptedBookingPage({
     super.key,
     required this.bookingId,
     required this.userId,
-    required this.bookingDetails,
+    required this.bookingDetails, 
+    required this.bookingTimeInMinutes,
   });
 
   @override
@@ -28,6 +33,7 @@ class _AcceptedBookingPageState extends State<AcceptedBookingPage> with SingleTi
   late Animation<double> _animation;
   String? _customerPhotoUrl;
   final DatabaseReference dbRef = FirebaseDatabase.instance.ref();
+  late StreamSubscription<DatabaseEvent> _finishRequestSubscription;
 
   @override
   void initState() {
@@ -42,6 +48,7 @@ class _AcceptedBookingPageState extends State<AcceptedBookingPage> with SingleTi
       curve: Curves.easeInOut,
     );
     _controller.forward();
+    _setupFinishRequestListener();
   }
 
   Future<void> _loadCustomerPhoto() async {
@@ -71,10 +78,85 @@ class _AcceptedBookingPageState extends State<AcceptedBookingPage> with SingleTi
     });
   }
 
+  void _setupFinishRequestListener() {
+    DatabaseReference bookingRef = FirebaseDatabase.instance
+        .ref()
+        .child("bookings")
+        .child(widget.userId)
+        .child(widget.bookingId);
+
+    _finishRequestSubscription = bookingRef
+        .child('finish_requested')
+        .onValue
+        .listen((DatabaseEvent event) {
+      if (event.snapshot.value == true) {
+        // Show confirmation dialog
+        _showFinishConfirmationDialog();
+        // Reset the finish_requested flag
+        bookingRef.child('finish_requested').set(false);
+      }
+    });
+  }
+
+  void _showFinishConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Finish Ride'),
+          content: const Text('This ride has finished. Do you confirm?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                _confirmFinishRide();
+                Navigator.of(context).pop(); // Close dialog
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _confirmFinishRide() {
+    DatabaseReference bookingRef = FirebaseDatabase.instance
+        .ref()
+        .child("bookings")
+        .child(widget.userId)
+        .child(widget.bookingId);
+
+    bookingRef.update({
+      "status": "finished",
+    }).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ride completed successfully')),
+      );
+      
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ChooseBookingPage(),
+        ),
+      );
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update ride status: $error')),
+      );
+    });
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
     _controller.dispose();
+    _finishRequestSubscription.cancel();
     super.dispose();
   }
 
@@ -282,13 +364,24 @@ class _AcceptedBookingPageState extends State<AcceptedBookingPage> with SingleTi
     );
   }
 
+  void _onChatWithCustomer() {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ChatPage(
+        bookingId: widget.bookingId,
+        senderId: widget.userId,
+        receiverId: widget.bookingDetails.userId,
+      ),
+    ),
+  );
+}
+
   Widget _buildActionButtons() {
     return Column(
       children: [
         ElevatedButton.icon(
-          onPressed: () {
-            // Chat functionality
-          },
+          onPressed: _onChatWithCustomer,
           icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
           label: const Text(
             "Chat with Customer",
@@ -371,11 +464,19 @@ class _AcceptedBookingPageState extends State<AcceptedBookingPage> with SingleTi
   }
 
   void _onCancelRide() {
+
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const ChooseBookingPage()),
-    );
-  }
+      MaterialPageRoute(
+      builder: (context) => CancellationBookingPage(
+      bookingId: widget.bookingId,
+      userId: widget.userId,
+      bookingDetails: widget.bookingDetails,
+      bookingTimeInMinutes: widget.bookingTimeInMinutes,
+      ),
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
