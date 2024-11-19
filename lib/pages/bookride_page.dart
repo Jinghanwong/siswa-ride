@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:siswa_ride/pages/bookride2_page.dart';
 
@@ -46,238 +48,336 @@ class _BookridePageState extends State<BookridePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Book a Ride'),
-        backgroundColor: const Color.fromARGB(255, 48, 98, 207),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: const Text(
+          'Book a Ride',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF82B1FF), Color(0xFF2962FF)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+            colors: [
+              const Color(0xFF2962FF).withOpacity(0.8),
+              const Color(0xFF82B1FF).withOpacity(0.9),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+        child: SafeArea(
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                const Row(
-                  children: [
-                    Icon(Icons.my_location_outlined,
-                        color: Colors.white), // Symbol for location
-                    SizedBox(width: 8),
-                    Text(
-                      'From',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(10), // Rounded corners
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: fromLocation,
-                      hint: const Text('Select a location'),
-                      isExpanded: true,
-                      items: locations.map((String location) {
-                        return DropdownMenuItem<String>(
-                          value: location,
-                          child: Text(location),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          fromLocation = newValue;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Row(
-                  children: [
-                    Icon(Icons.location_on,
-                        color: Colors.white), // Symbol for location
-                    SizedBox(width: 8),
-                    Text(
-                      'To',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(10), // Rounded corners
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: toLocation,
-                      hint: const Text('Select a location'),
-                      isExpanded: true,
-                      items: locations.map((String location) {
-                        return DropdownMenuItem<String>(
-                          value: location,
-                          child: Text(location),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          toLocation = newValue;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Row(
-                  children: [
-                    Icon(Icons.person,
-                        color: Colors.white), // Symbol for person
-                    SizedBox(width: 8),
-                    Text(
-                      'Driver Gender Preference',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(10), // Rounded corners
-                  ),
-                  child: Column(
-                    children: [
-                      RadioListTile<String>(
-                        title: const Text('Male'),
-                        value: 'Male',
-                        groupValue: genderPreference,
-                        onChanged: (newValue) {
-                          setState(() {
-                            genderPreference = newValue;
-                          });
-                        },
-                      ),
-                      RadioListTile<String>(
-                        title: const Text('Female'),
-                        value: 'Female',
-                        groupValue: genderPreference,
-                        onChanged: (newValue) {
-                          setState(() {
-                            genderPreference = newValue;
-                          });
-                        },
-                      ),
-                      RadioListTile<String>(
-                        title: const Text('No Preference'),
-                        value: 'No Preference',
-                        groupValue: genderPreference,
-                        onChanged: (newValue) {
-                          setState(() {
-                            genderPreference = newValue;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Row(
-                  children: [
-                    Icon(Icons.payment,
-                        color: Colors.white), // Symbol for payment
-                    SizedBox(width: 8),
-                    Text(
-                      'Payment Option',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(10), // Rounded corners
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: paymentOption,
-                      hint: const Text('Select a payment option'),
-                      isExpanded: true,
-                      items: paymentOptions.map((String option) {
-                        return DropdownMenuItem<String>(
-                          value: option,
-                          child: Text(option),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          paymentOption = newValue;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Bookride2Page(
-                            fromLocation: fromLocation,
-                            toLocation: toLocation,
-                            genderPreference: genderPreference,
-                            paymentOption: paymentOption,
-                          ),
-                        ),
-                      );
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  _buildLocationSection(
+                    icon: Icons.my_location_outlined,
+                    title: 'From',
+                    value: fromLocation,
+                    onChanged: (newValue) {
+                      setState(() => fromLocation = newValue);
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 48, 98, 207),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 80, vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                    ),
-                    child: const Text(
-                      "Next",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
-                    ),
+                    locations: locations,
                   ),
+                  const SizedBox(height: 20),
+                  _buildLocationSection(
+                    icon: Icons.location_on,
+                    title: 'To',
+                    value: toLocation,
+                    onChanged: (newValue) {
+                      setState(() => toLocation = newValue);
+                    },
+                    locations: locations,
+                  ),
+                  const SizedBox(height: 30),
+                  _buildGenderPreferenceSection(),
+                  const SizedBox(height: 30),
+                  _buildPaymentSection(),
+                  const SizedBox(height: 40),
+                  _buildNextButton(context),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLocationSection({
+    required IconData icon,
+    required String title,
+    required String? value,
+    required Function(String?) onChanged,
+    required List<String> locations,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(icon, color: Colors.white, size: 24),
+            const SizedBox(width: 12),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: value,
+                  hint: Text(
+                    'Select a location',
+                    style: TextStyle(color: Colors.white.withOpacity(0.7)),
+                  ),
+                  isExpanded: true,
+                  dropdownColor: Colors.black.withOpacity(0.8),
+                  icon: Icon(Icons.keyboard_arrow_down,
+                      color: Colors.white.withOpacity(0.7)),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                  items: locations.map((String location) {
+                    return DropdownMenuItem<String>(
+                      value: location,
+                      child: Text(location),
+                    );
+                  }).toList(),
+                  onChanged: onChanged,
                 ),
-                const SizedBox(height: 20),
-              ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGenderPreferenceSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Row(
+          children: [
+            Icon(Icons.person, color: Colors.white, size: 24),
+            SizedBox(width: 12),
+            Text(
+              'Driver Gender Preference',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Column(
+                children: [
+                  _buildRadioTile('Male'),
+                  Divider(color: Colors.white.withOpacity(0.1), height: 1),
+                  _buildRadioTile('Female'),
+                  Divider(color: Colors.white.withOpacity(0.1), height: 1),
+                  _buildRadioTile('No Preference'),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRadioTile(String value) {
+    return RadioListTile<String>(
+      title: Text(
+        value,
+        style: const TextStyle(color: Colors.white, fontSize: 16),
+      ),
+      value: value,
+      groupValue: genderPreference,
+      activeColor: Colors.white,
+      onChanged: (newValue) {
+        setState(() => genderPreference = newValue);
+      },
+    );
+  }
+
+  Widget _buildPaymentSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Row(
+          children: [
+            Icon(Icons.payment, color: Colors.white, size: 24),
+            SizedBox(width: 12),
+            Text(
+              'Payment Option',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.white.withOpacity(0.2)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: paymentOption,
+                  hint: Text(
+                    'Select a payment option',
+                    style: TextStyle(color: Colors.white.withOpacity(0.7)),
+                  ),
+                  isExpanded: true,
+                  dropdownColor: Colors.black.withOpacity(0.8),
+                  icon: Icon(Icons.keyboard_arrow_down,
+                      color: Colors.white.withOpacity(0.7)),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                  items: paymentOptions.map((String option) {
+                    return DropdownMenuItem<String>(
+                      value: option,
+                      child: Text(option),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() => paymentOption = newValue);
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNextButton(BuildContext context) {
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          gradient: const LinearGradient(
+            colors: [Color(0xFF2962FF), Color(0xFF82B1FF)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF2962FF).withOpacity(0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Bookride2Page(
+                  fromLocation: fromLocation,
+                  toLocation: toLocation,
+                  genderPreference: genderPreference,
+                  paymentOption: paymentOption,
+                ),
+              ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+          ),
+          child: const Text(
+            "Next",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
