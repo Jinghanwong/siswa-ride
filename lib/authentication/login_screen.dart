@@ -9,7 +9,7 @@ import 'package:siswa_ride/pages/dashboard2.dart';
 import 'package:siswa_ride/widgets/loading_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -35,9 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   signInFormValidation() {
-    //cMethods.checkConnectivity(context); // Check network connectivity
-
-    // Proceed with form validation
     if (!emailTextEditingController.text.contains("@")) {
       cMethods.displaySnackBar("Your email format is invalid", context);
     } else if (passwordTextEditingController.text.trim().length < 5) {
@@ -119,100 +116,145 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "Login",
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Login your registered Account",
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(22),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextField(
-                      controller: emailTextEditingController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: "User Email",
-                        labelStyle: TextStyle(
-                          fontSize: 14,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 80), // Increased top spacing
+                  // Logo or App Icon can be added here
+                  Center(
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 48, 98, 207).withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.person,
+                        size: 50,
+                        color: const Color.fromARGB(255, 48, 98, 207),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  // Welcome Text
+                  const Center(
+                    child: Text(
+                      "Welcome Back",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Center(
+                    child: Text(
+                      "Login to your account",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  // Email TextField
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: TextField(
+                        controller: emailTextEditingController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          icon: Icon(Icons.email_outlined, color: Colors.grey[600]),
+                          hintText: "Email",
+                          hintStyle: TextStyle(color: Colors.grey[500]),
                         ),
                       ),
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 15,
-                      ),
                     ),
-                    const SizedBox(
-                      height: 22,
+                  ),
+                  const SizedBox(height: 16),
+                  // Password TextField
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    TextField(
-                      controller: passwordTextEditingController,
-                      obscureText: true,
-                      keyboardType: TextInputType.text,
-                      decoration: const InputDecoration(
-                        labelText: "User Password",
-                        labelStyle: TextStyle(
-                          fontSize: 14,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: TextField(
+                        controller: passwordTextEditingController,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          icon: Icon(Icons.lock_outline, color: Colors.grey[600]),
+                          hintText: "Password",
+                          hintStyle: TextStyle(color: Colors.grey[500]),
                         ),
                       ),
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 15,
-                      ),
                     ),
-                    const SizedBox(
-                      height: 32,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        signInFormValidation(); // Call form validation directly
-                      },
+                  ),
+                  const SizedBox(height: 24),
+                  // Login Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: signInFormValidation,
                       style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 48, 98, 207),
-                          padding: const EdgeInsets.symmetric(horizontal: 80)),
+                        backgroundColor: const Color.fromARGB(255, 48, 98, 207),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
+                      ),
                       child: const Text(
                         "Login",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const RegisterScreen()));
-                },
-                child: const Text(
-                  "Don't have an Account? Register Here",
-                  style: TextStyle(
-                    color: Colors.grey,
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 16),
+                  // Register Link
+                  Center(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Don't have an account? Register Here",
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
